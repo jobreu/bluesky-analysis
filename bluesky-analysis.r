@@ -49,7 +49,7 @@ dfm_bluesky <- dfm(tokens_bluesky)
 library(quanteda.textstats)
 
 dfm_bluesky %>%
-  dfm_remove(pattern = c("bsky.social", "dass",
+  dfm_remove(pattern = c("bsky.social", "dass", # zusätzliche Entfernung von "custom stop words"
                          "@*", "#*")) %>% # ohne User Mentions und Hashtags
   textstat_frequency(n = 20)
 
@@ -64,7 +64,7 @@ head(topuser, 10) # 10 häufigste User Mentions
 library(quanteda.textplots)
 
 dfm_bluesky %>% 
-  dfm_remove(pattern = c("bsky.social", "dass",
+  dfm_remove(pattern = c("bsky.social", "dass", # zusätzliche Entfernung von "custom stop words"
                          "@*", "#*")) %>% # ohne User Mentions und Hashtags
   dfm_trim(min_termfreq = 20) %>%
   textplot_wordcloud()
@@ -72,8 +72,8 @@ dfm_bluesky %>%
 library(ggplot2)
 
 tstat_freq <- dfm_bluesky %>% 
-  dfm_remove(pattern = c("bsky.social", "dass",
-                         "@*", "#*")) %>%  
+  dfm_remove(pattern = c("bsky.social", "dass", # zusätzliche Entfernung von "custom stop words"
+                         "@*", "#*")) %>%  # ohne User Mentions und Hashtags
   textstat_frequency(n = 20)
 
 ggplot(tstat_freq, aes(x = frequency, y = reorder(feature, frequency))) +
@@ -81,9 +81,14 @@ ggplot(tstat_freq, aes(x = frequency, y = reorder(feature, frequency))) +
   labs(x = "Frequency", y = "Feature") +
   scale_x_continuous(expand = expansion(mult = c(0, 0.05)))
 
+posts %>% 
+    count(author_handle) %>% 
+    arrange(desc(n)) %>% 
+    head(10)
+
 tstat_key <- dfm_bluesky %>% 
-  dfm_remove(pattern = c("bsky.social", "dass",
-                         "@*", "#*")) %>%  
+  dfm_remove(pattern = c("bsky.social", "dass", # zusätzliche Entfernung von "custom stop words"
+                         "@*", "#*")) %>%  # ohne User Mentions und Hashtags
   textstat_keyness(target = dfm_bluesky$author_handle == "insert_user_handle") # hier den Namen des zu vergleichenden Accounts einfügen
 
 textplot_keyness(tstat_key)
